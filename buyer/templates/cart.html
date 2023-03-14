@@ -1,0 +1,181 @@
+{% extends 'buyer_header.html' %}
+{% load static %}
+
+{% block content %}
+<!-- products-breadcrumb -->
+	<div class="products-breadcrumb">
+		<div class="container">
+			<ul>
+				<li><i class="fa fa-home" aria-hidden="true"></i><a href="{% url 'index' %}">Home</a><span>|</span></li>
+				<li>Checkout</li>
+			</ul>
+		</div>
+	</div>
+<!-- //products-breadcrumb -->
+<!-- banner -->
+	<div class="banner">
+		<div class="w3l_banner_nav_left">
+			<nav class="navbar nav_bottom">
+			 <!-- Brand and toggle get grouped for better mobile display -->
+			  <div class="navbar-header nav_2">
+				  <button type="button" class="navbar-toggle collapsed navbar-toggle1" data-toggle="collapse" data-target="#bs-megadropdown-tabs">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				  </button>
+			   </div> 
+			   <!-- Collect the nav links, forms, and other content for toggling -->
+				<div class="collapse navbar-collapse" id="bs-megadropdown-tabs">
+					<ul class="nav navbar-nav nav_1">
+				<li><i class="fa fa-home" aria-hidden="true"></i><a href="{% url 'index' %}">Home</a><span>|</span></li>
+				<li><a href="{% url 'products' %}">Branded Foods</a></li>
+						<li><a href="{% url 'household' %}">Households</a></li>
+						<li class="dropdown mega-dropdown active">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">Veggies & Fruits<span class="caret"></span></a>				
+							<div class="dropdown-menu mega-dropdown-menu w3ls_vegetables_menu">
+								<div class="w3ls_vegetables">
+									<ul>	
+										<li><a href="{% url 'vegetables' %}">Vegetables</a></li>
+										<li><a href="{% url 'vegetables' %}">Fruits</a></li>
+									</ul>
+								</div>                  
+							</div>				
+						</li>
+						<li><a href="{% url 'kitchen' %}">Kitchen</a></li>
+						<li><a href="{% url 'shortcodes' %}">Short Codes</a></li>
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">Beverages<span class="caret"></span></a>
+							<div class="dropdown-menu mega-dropdown-menu w3ls_vegetables_menu">
+								<div class="w3ls_vegetables">
+									<ul>
+										<li><a href="{% url 'drinks' %}">Soft Drinks</a></li>
+										<li><a href="{% url 'drinks' %}">Juices</a></li>
+									</ul>
+								</div>                  
+							</div>	
+						</li>
+						<li><a href="{% url 'pet' %}">Pet Food</a></li>
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">Frozen Foods<span class="caret"></span></a>
+							<div class="dropdown-menu mega-dropdown-menu w3ls_vegetables_menu">
+								<div class="w3ls_vegetables">
+									<ul>
+										<li><a href="{% url 'frozen' %}">Frozen Snacks</a></li>
+										<li><a href="{% url 'frozen' %}">Frozen Nonveg</a></li>
+									</ul>
+								</div>                  
+							</div>	
+						</li>
+						<li><a href="{% url 'bread' %}">Bread & Bakery</a></li>
+					</ul>
+				 </div><!-- /.navbar-collapse -->
+			</nav>
+		</div>
+		<div class="w3l_banner_nav_right">
+<!-- about -->
+		<div class="privacy about">
+			<h3>Your <span>Cart</span></h3>
+			
+	      <div class="checkout-right">
+					<h4>Your shopping cart contains these products:</h4>
+				<table class="timetable_sub">
+					<thead>
+						<tr>
+							<th>Product Picture</th>
+							<th>Product</th>
+							<th>Price</th>
+							<!-- <th>Quantity</th> -->
+							<th>Remove</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for i in cart_product %}
+						<tr class="rem1">
+						<td class="invert-image"><a href="single.html"><img src="{{i.pic.url}}" style="max-height: 50px; max-width: 50px;" alt=" " class="img-responsive"></a></td>
+						<!-- <td class="invert">
+							 <div class="quantity"> 
+								<div class="quantity-select">                           
+									<div class="entry value-minus">&nbsp;</div>
+									<div class="entry value-plus active">&nbsp;</div>
+								</div>
+							</div>
+						</td> -->
+						<td class="invert">{{i.product_name}}</td>
+						<td class="invert">{{i.price}}</td>
+						<td class="invert">
+							<button><a href="{% url 'del_cart_item' i.id %}" >Delete</a></button>
+						</td>
+					</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+			<h3>Your Total Amount : {{total_amount}}</h3>
+			<div class="checkout-left">	
+				<div class="col-md-8 address_form_agile">
+					<div class="checkout-right-basket">
+				    	<!-- <a href="">Make a Payment <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a>
+			      	</div>
+					  <div class="checkout-right-basket"> -->
+						<button id="pay-btn" >Make A Payment</button>
+					</div>
+	<!-- Razorpay's Javascript code. -->
+	<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+	<script>
+		var options = {
+		
+		// Enter the Key ID generated from the Dashboard
+		key: "{{ razorpay_merchant_key }}",
+		
+		// Amount is in currency subunits.
+		// Default currency is INR. Hence,
+		// 50000 refers to 50000 paise
+		amount: "{{ razorpay_amount }}",
+		currency: "{{ currency }}",
+		
+		// Your/store name.
+		name: "Dj Razorpay",
+		
+		// Pass the `id` obtained in the response of Step 1
+		order_id: "{{ razorpay_order_id }}",
+		callback_url: "{{ callback_url }}",
+		};
+		
+		// initialise razorpay with the options.
+		var rzp1 = new Razorpay(options);
+		
+		// add event listener to the payment button.
+		document.getElementById("pay-btn").onclick = function (e) {
+		rzp1.open();
+		e.preventDefault();
+		};
+	</script>
+				</div>
+				<div class="clearfix"> </div>
+			</div>
+		</div>
+<!-- //about -->
+		</div>
+		<div class="clearfix"></div>
+	</div>
+<!-- //banner -->
+
+
+<!-- newsletter -->
+	<div class="newsletter">
+		<div class="container">
+			<div class="w3agile_newsletter_left">
+				<h3>sign up for our newsletter</h3>
+			</div>
+			<div class="w3agile_newsletter_right">
+				<form action="#" method="post">
+					<input type="email" name="Email" value="Email" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Email';}" required="">
+					<input type="submit" value="subscribe now">
+				</form>
+			</div>
+			<div class="clearfix"> </div>
+		</div>
+	</div>
+<!-- //newsletter -->
+{% endblock %}
