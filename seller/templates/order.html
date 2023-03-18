@@ -111,11 +111,12 @@
                   <th>Buyer Name </th>
                   <th>Product Name</th>
                   <th>Status</th>
+                  {% comment %} <th>Seller Name </th> {% endcomment %}
                   <th>Action</th>
                   <th scope="col">ACTION</th>
                   </tr>
                 </thead>
-                {% for i in order_data %}
+              
                 <tbody>
                   
                   <tr>
@@ -123,6 +124,7 @@
                   <td>{{i.buyer.first_name}}</td>
                   <td>{{i.product.product_name}}</td>
                   <td>{{i.status}}</td>
+                  {% comment %} <td>{{i.product.seller}}</td> {% endcomment %}
                   <td>
                     <a href="{% url 'edit_product' i.id %}"><button class="btn btn-primary">Edit</button></a>
                     <a href="{% url 'delete_product' i.id %}"><button class="btn btn-primary">Remove</button></a>
@@ -131,16 +133,14 @@
                   </tr>
                  
                 </tbody>
-                {% endfor %}
+        
                 </table>
               </div>
             </div>
           </div>
         </div>
         </div>
-        </div>
-        
-        {% endblock %}                        
+        </div>                    
         
   <footer class="tm-footer row tm-mt-small">
     <div class="col-12 font-weight-light">

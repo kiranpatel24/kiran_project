@@ -266,39 +266,31 @@ def paymenthandler(request):
             params_dict = {
                 'razorpay_order_id': razorpay_order_id,
                 'razorpay_payment_id': payment_id,
-				'razorpay_signature': signature
-			}
-           
-            result = razorpay_client.utility.verify_payment_signature(params_dict)
-            if result is not None:
-                amount = t_amount * 100 
-                try:
-					# capture the paymemt
-                    razorpay_client.payment.capture(payment_id, amount)
-                    buyer_row = Buyer.objects.get(email=request.session['email'])
-                    my_product = Cart.objects.filter(buyer=buyer_row)
-                    for i in my_product:
-                        MyOrder.objects.create(
-                            buyer=buyer_row,
-                            product=i.product,
-                            status='panding')
-                        i.delete()
-                    return render(request, 'paymentsuccess.html')
-                except:
-                    # if there is an error while capturing payment.
-                    return render(request, 'paymentfailed.html')
-            else:
-				# if signature verification fails
-                return render(request, 'paymentfail.html')
+                'razorpay_signature': signature
+            }          
+            try:
+                global amount
+                amount = amount
+                razorpay_client.payment.capture(payment_id, amount)
+                buyer_row = Buyer.objects.get(email=request.session['email'])
+                my_product = Cart.objects.filter(buyer=buyer_row)
+                for i in my_product:
+                    # OrderSummery.objects.create(
+                    #     buyer=buyer_row,
+                    #     product=i.product,
+                    #     status='panding'
+                    # )
+                    i.delete()
+                return render(request, 'paymentsuccess.html')
+            except:
+                # if there is an error while capturing payment.
+                return render(request, 'paymentfailed.html') 
         except:
 			# if we don't find the required parameters in POST data
             return HttpResponseBadRequest()
     else:
 	# if other than POST request is made.
         return HttpResponseBadRequest()
-
-
-
 
 
 def cart(request):
@@ -313,6 +305,7 @@ def cart(request):
     #Payment buton activate karne ka code
     currency = 'INR'
     # print(t_amount * 100)
+    global amount
     amount = t_amount * 100 # total amount in paisa will accepted here so we have to multiply amount with 100
     if t_amount == 0 :
         return render(request, 'empty_cart.html')

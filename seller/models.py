@@ -25,17 +25,18 @@ class Product(models.Model):
     def __str__(self):
         return self.product_name
 
-class MyOrder(models.Model):
-    all_status = [
-        ('pending', 'pending'),
-        ('dispatched', 'dispatched')
-    ]
 
-    buyer = models.ForeignKey(to='buyer.Buyer', on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    status = models.CharField(choices= all_status,max_length=50, default='pending')
-
-    def __str__(self):
-            return str(self.id)
         
+# class OrderSummery(models.Model):
+#     all_status = [
+#         ('pending', 'pending'),
+#         ('dispatched', 'dispatched')
+#     ]
+
+#     buyer = models.ForeignKey(to='buyer.Buyer', on_delete=models.CASCADE)
+#     product = models.ForeignKey(Product, on_delete=models.CASCADE)
+#     status = models.CharField(choices= all_status,max_length=50, default='pending')
+
+#     def __str__(self):
+#         return str(self.id)
         
