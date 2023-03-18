@@ -49,16 +49,10 @@ def seller_edit_product(request, pk):
 
 def seller_index(request):
     try:
-        # print(request.session['seller_email'])
         seller_obj=Seller.objects.get(email=request.session['seller_email'])
-        all_order=MyOrder.objects.filter(product__seller=seller_obj)
-        return render(request,'seller_index.html',{'seller_data':seller_obj,'order_data':all_order})
+        return render(request,'seller_index.html',{'seller_data':seller_obj})
     except:
-        try:
-            request.session['seller_email']
-            return render(request,'seller_index.html',{'seller_data':seller_obj})
-        except:
-            return render(request,'seller_login.html')
+        return render(request,'seller_login.html')
 
 
 
@@ -145,11 +139,3 @@ def product_delete(request, pk):
     p_obj.delete()
     return redirect('seller_products')
     
-# def change_status(request,pk):
-#     order_obj=OrderSummery.objects.get(id=pk)
-#     order_obj.status='dispatched'
-#     order_obj.save()
-#     return redirect('seller_index')
-
-# def order(request):
-#     return(request,'order.html')

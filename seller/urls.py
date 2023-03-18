@@ -12,6 +12,5 @@ urlpatterns = [
     path('seller_logout/',seller_logout, name='seller_logout'),
     path('seller_edit_profile/',seller_edit_profile, name='seller_edit_profile'),
     path('product_delete/<int:pk>',product_delete, name='product_delete'),
-#     path('order/',order, name='order'),
-#     path('change_status/<int:pk>',change_status, name = 'change_status')
+
   ]
