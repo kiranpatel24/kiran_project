@@ -275,11 +275,7 @@ def paymenthandler(request):
                 buyer_row = Buyer.objects.get(email=request.session['email'])
                 my_product = Cart.objects.filter(buyer=buyer_row)
                 for i in my_product:
-                    # OrderSummery.objects.create(
-                    #     buyer=buyer_row,
-                    #     product=i.product,
-                    #     status='panding'
-                    # )
+                  
                     i.delete()
                 return render(request, 'paymentsuccess.html')
             except:
